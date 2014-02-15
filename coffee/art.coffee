@@ -4,6 +4,9 @@ cAttr = undefined
 lAttr = 
 	'stroke':'white'
 	'stroke-width': 0.5
+	'fill':'blue'
+
+
 
 root3 = Math.sqrt(3)
 
@@ -18,33 +21,35 @@ $(document).ready ->
 
 circles = () ->
 
-	for i in [0..$(window).height() / 20]
+	Y = () -> Math.random() * $(window).height()
+	X = () -> Math.random() * $(window).width()
+	R = () -> 160 + Math.random() * 60 - 30
 
-		y = i * 200
+	cAttr = () -> 
 
-		for j in [0..$(window).width() / 20]
+		r = Math.random() * 150 + 50
+		g = Math.random() * 150 + 50
+		b = Math.random() * 150 + 50
+		a = Math.random() / 3 + 0.35
 
-			Y = () -> y + Math.random() * 10 - 5
-			X = () -> j * 200 + Math.random() * 200 - 100
-			R = () -> 200 + Math.random() * 100 - 50
+		componentToHex = (c) -> if c.toString(16).length is 2 then c.toString(16) else "0" + c.toString(16)
 
+		hex = componentToHex(Math.floor(r)) + componentToHex(Math.floor(g)) + componentToHex(Math.floor(b));
+		#color = "0-#ffffff-##{hex}"
+		#color = '0-#ffffff-#000000'
+		color = "rgb(#{r}, #{g}, #{b})"
 
-			cAttr = () -> 
+		{
+			'stroke': 'white'
+			'stroke-width': 0.4
+			'fill': color
+			'opacity': a
+			#'fill-opacity': a
+		}
 
-				r = Math.random() * 200 + 50
-				g = Math.random() * 200 + 50
-				b = Math.random() * 200 + 50
-				a = Math.random() / 3 + 0.2
+	for i in [0..100]
 
-				{
-					'stroke-width': 0
-					'fill': "rgb(#{r}, #{g}, #{b})"
-					'fill-opacity': a
-				}
-
-			raphael.circle(X(), Y(), R()).attr(cAttr())
-			raphael.circle(X(), Y(), R()).attr(cAttr())
-			raphael.circle(X(), Y(), R()).attr(cAttr())
+		raphael.circle(X(), Y(), R()).attr(cAttr())
 
 
 
@@ -54,7 +59,7 @@ lines = () ->
 
 		verticals = []
 
-		for i in [0..$(window).width() / 50]
+		for i in [0..$(window).width() / 50 + 1]
 			x1 = x2 = i * 50
 			y1 = 0
 			y2 = $(window).height()
@@ -67,7 +72,7 @@ lines = () ->
 
 		horizontals = []
 
-		for i in [0..$(window).height() / (50 * root3)]
+		for i in [0..$(window).height() / (50 * root3) + 1]
 			y1 = y2 = i * 50 * root3
 			x1 = 0
 			x2 = $(window).width()
@@ -103,13 +108,11 @@ lines = () ->
 		return boxes
 
 	Fill = (boxes) ->
-
+		
 		for b in boxes
 
-			raphael.path("M#{b['N']['x']},#{b['N']['y']},L#{b['SE']['x']},#{b['SE']['y']}").attr(lAttr)
-			raphael.path("M#{b['N']['x']},#{b['N']['y']},L#{b['SW']['x']},#{b['SW']['y']}").attr(lAttr)
-			raphael.path("M#{b['S']['x']},#{b['S']['y']},L#{b['NE']['x']},#{b['NE']['y']}").attr(lAttr)
-			raphael.path("M#{b['S']['x']},#{b['S']['y']},L#{b['NW']['x']},#{b['NW']['y']}").attr(lAttr)
+			raphael.path("M#{b['N']['x']},#{b['N']['y']},L#{b['SE']['x']},#{b['SE']['y']},#{b['SW']['x']},#{b['SW']['y']},#{b['N']['x']},#{b['N']['y']}").attr(lAttr).attr('fill-opacity':Math.random()/10)
+			raphael.path("M#{b['S']['x']},#{b['S']['y']},L#{b['NW']['x']},#{b['NW']['y']},#{b['NE']['x']},#{b['NE']['y']},#{b['S']['x']},#{b['S']['y']}").attr(lAttr).attr('fill-opacity':Math.random()/10)
 
 			raphael.path("M#{b['N']['x']},#{b['N']['y']},L#{b['WN']['x']},#{b['WN']['y']}").attr(lAttr)
 			raphael.path("M#{b['N']['x']},#{b['N']['y']},L#{b['EN']['x']},#{b['EN']['y']}").attr(lAttr)
@@ -120,6 +123,13 @@ lines = () ->
 			raphael.path("M#{b['EN']['x']},#{b['EN']['y']},L#{b['CS']['x']},#{b['CS']['y']}").attr(lAttr)
 			raphael.path("M#{b['WS']['x']},#{b['WS']['y']},L#{b['CN']['x']},#{b['CN']['y']}").attr(lAttr)
 			raphael.path("M#{b['ES']['x']},#{b['ES']['y']},L#{b['CN']['x']},#{b['CN']['y']}").attr(lAttr)
+		
+			raphael.triangle
+
+
+
+
+
 
 
 	return Fill(Boxes(Verticals(), Horizontals()))
@@ -136,7 +146,6 @@ setAndBindDimensions = () ->
 		art.width $(window).width() 
 		raphael.setSize(art.width(), art.height())
 		$('svg').height $(window).height()
-
 
 	setDimensions()
 

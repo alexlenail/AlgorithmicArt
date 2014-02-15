@@ -8,7 +8,8 @@
 
   lAttr = {
     'stroke': 'white',
-    'stroke-width': 0.5
+    'stroke-width': 0.5,
+    'fill': 'blue'
   };
 
   root3 = Math.sqrt(3);
@@ -21,41 +22,41 @@
   });
 
   circles = function() {
-    var R, X, Y, i, j, y, _i, _ref, _results;
-    _results = [];
-    for (i = _i = 0, _ref = $(window).height() / 20; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-      y = i * 200;
-      _results.push((function() {
-        var _j, _ref1, _results1;
-        _results1 = [];
-        for (j = _j = 0, _ref1 = $(window).width() / 20; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; j = 0 <= _ref1 ? ++_j : --_j) {
-          Y = function() {
-            return y + Math.random() * 10 - 5;
-          };
-          X = function() {
-            return j * 200 + Math.random() * 200 - 100;
-          };
-          R = function() {
-            return 200 + Math.random() * 100 - 50;
-          };
-          cAttr = function() {
-            var a, b, g, r;
-            r = Math.random() * 200 + 50;
-            g = Math.random() * 200 + 50;
-            b = Math.random() * 200 + 50;
-            a = Math.random() / 3 + 0.2;
-            return {
-              'stroke-width': 0,
-              'fill': "rgb(" + r + ", " + g + ", " + b + ")",
-              'fill-opacity': a
-            };
-          };
-          raphael.circle(X(), Y(), R()).attr(cAttr());
-          raphael.circle(X(), Y(), R()).attr(cAttr());
-          _results1.push(raphael.circle(X(), Y(), R()).attr(cAttr()));
+    var R, X, Y, i, _i, _results;
+    Y = function() {
+      return Math.random() * $(window).height();
+    };
+    X = function() {
+      return Math.random() * $(window).width();
+    };
+    R = function() {
+      return 160 + Math.random() * 60 - 30;
+    };
+    cAttr = function() {
+      var a, b, color, componentToHex, g, hex, r;
+      r = Math.random() * 150 + 50;
+      g = Math.random() * 150 + 50;
+      b = Math.random() * 150 + 50;
+      a = Math.random() / 3 + 0.35;
+      componentToHex = function(c) {
+        if (c.toString(16).length === 2) {
+          return c.toString(16);
+        } else {
+          return "0" + c.toString(16);
         }
-        return _results1;
-      })());
+      };
+      hex = componentToHex(Math.floor(r)) + componentToHex(Math.floor(g)) + componentToHex(Math.floor(b));
+      color = "rgb(" + r + ", " + g + ", " + b + ")";
+      return {
+        'stroke': 'white',
+        'stroke-width': 0.4,
+        'fill': color,
+        'opacity': a
+      };
+    };
+    _results = [];
+    for (i = _i = 0; _i <= 100; i = ++_i) {
+      _results.push(raphael.circle(X(), Y(), R()).attr(cAttr()));
     }
     return _results;
   };
@@ -65,7 +66,7 @@
     Verticals = function() {
       var i, verticals, x1, x2, y1, y2, _i, _ref;
       verticals = [];
-      for (i = _i = 0, _ref = $(window).width() / 50; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      for (i = _i = 0, _ref = $(window).width() / 50 + 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
         x1 = x2 = i * 50;
         y1 = 0;
         y2 = $(window).height();
@@ -77,7 +78,7 @@
     Horizontals = function() {
       var horizontals, i, x1, x2, y1, y2, _i, _ref;
       horizontals = [];
-      for (i = _i = 0, _ref = $(window).height() / (50 * root3); 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+      for (i = _i = 0, _ref = $(window).height() / (50 * root3) + 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
         y1 = y2 = i * 50 * root3;
         x1 = 0;
         x2 = $(window).width();
@@ -157,10 +158,12 @@
       _results = [];
       for (_i = 0, _len = boxes.length; _i < _len; _i++) {
         b = boxes[_i];
-        raphael.path("M" + b['N']['x'] + "," + b['N']['y'] + ",L" + b['SE']['x'] + "," + b['SE']['y']).attr(lAttr);
-        raphael.path("M" + b['N']['x'] + "," + b['N']['y'] + ",L" + b['SW']['x'] + "," + b['SW']['y']).attr(lAttr);
-        raphael.path("M" + b['S']['x'] + "," + b['S']['y'] + ",L" + b['NE']['x'] + "," + b['NE']['y']).attr(lAttr);
-        raphael.path("M" + b['S']['x'] + "," + b['S']['y'] + ",L" + b['NW']['x'] + "," + b['NW']['y']).attr(lAttr);
+        raphael.path("M" + b['N']['x'] + "," + b['N']['y'] + ",L" + b['SE']['x'] + "," + b['SE']['y'] + "," + b['SW']['x'] + "," + b['SW']['y'] + "," + b['N']['x'] + "," + b['N']['y']).attr(lAttr).attr({
+          'fill-opacity': Math.random() / 10
+        });
+        raphael.path("M" + b['S']['x'] + "," + b['S']['y'] + ",L" + b['NW']['x'] + "," + b['NW']['y'] + "," + b['NE']['x'] + "," + b['NE']['y'] + "," + b['S']['x'] + "," + b['S']['y']).attr(lAttr).attr({
+          'fill-opacity': Math.random() / 10
+        });
         raphael.path("M" + b['N']['x'] + "," + b['N']['y'] + ",L" + b['WN']['x'] + "," + b['WN']['y']).attr(lAttr);
         raphael.path("M" + b['N']['x'] + "," + b['N']['y'] + ",L" + b['EN']['x'] + "," + b['EN']['y']).attr(lAttr);
         raphael.path("M" + b['S']['x'] + "," + b['S']['y'] + ",L" + b['WS']['x'] + "," + b['WS']['y']).attr(lAttr);
@@ -168,7 +171,8 @@
         raphael.path("M" + b['WN']['x'] + "," + b['WN']['y'] + ",L" + b['CS']['x'] + "," + b['CS']['y']).attr(lAttr);
         raphael.path("M" + b['EN']['x'] + "," + b['EN']['y'] + ",L" + b['CS']['x'] + "," + b['CS']['y']).attr(lAttr);
         raphael.path("M" + b['WS']['x'] + "," + b['WS']['y'] + ",L" + b['CN']['x'] + "," + b['CN']['y']).attr(lAttr);
-        _results.push(raphael.path("M" + b['ES']['x'] + "," + b['ES']['y'] + ",L" + b['CN']['x'] + "," + b['CN']['y']).attr(lAttr));
+        raphael.path("M" + b['ES']['x'] + "," + b['ES']['y'] + ",L" + b['CN']['x'] + "," + b['CN']['y']).attr(lAttr);
+        _results.push(raphael.triangle);
       }
       return _results;
     };
